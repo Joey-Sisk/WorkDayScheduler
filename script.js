@@ -1,5 +1,5 @@
 // const currentHour = moment().format("H");
-const currentHour = 13;
+const currentHour = 14;
 let userTextArr = ["", "", "", "", "", "", "", "", ""];
 
 
@@ -10,11 +10,7 @@ timeColor();
 function timeColor() {
   for (let i = 0; i < userTextArr.length; i++) {
 
-    // let inputLocation = "$('#" + (i + 9) + "')";
-
-    let inputLocation = $(`#${i + 9}`)
-
-    console.log(inputLocation);
+    let inputLocation = $(`#${i + 9}`);
 
     if ((i + 9) < parseInt(currentHour)) {
       inputLocation.attr("class", "past");
@@ -24,9 +20,14 @@ function timeColor() {
       inputLocation.attr("class", "present");
     }
 
-    else if ((i + 9) > parseInt(currentHour)) {
+    else {
       inputLocation.attr("class", "future");
     }
-
   }
 }
+
+function saveInput(event) {
+  console.log($(event.target).siblings().eq(1).val());
+}
+
+$(".saveBtn").on("click", saveInput);
