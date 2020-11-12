@@ -1,30 +1,37 @@
 // const currentHour = moment().format("H");
-const currentHour = 14;
-let userTextArr;
+const currentHour = 14; // for debugging an arbitrary time
+let userTextArr = ["", "", "", "", "", "", "", "", ""]; // temporary textarea storage
 
-$("#currentDay").text(moment().format("MMM Do, YYYY"));
+$("#currentDay").text(moment().format("MMM Do, YYYY")); // moment date caller
 
-checkStorage();
+checkStorage(); // if previous information exhists, add it to array
 
-timeColor();
+timeColor(); // change color based on time of day
 
 function checkStorage() {
-  let previously = localStorage.getItem("usersInput");
-  if (previously === null) {
-    userTextArr = ["", "", "", "", "", "", "", "", ""];
+  let previously = localStorage.getItem("usersInput"); // get previous storage if it exhists
+  if (previously) { // if it does, 
+    userTextArr = previously; // fill it into the array
+
+    loadTextAreas(); // load onto screen
   }
-  else {
-    userTextArr = previously;
-    saveInput();
+}
+
+function loadTextAreas() {
+  for (let i = 0; i < userTextArr.length; i++) { 
+    const listPosition = userTextArr[i]; // un through each thing on the list
+
+    $(`#${i + 9}`).html(listPosition); // add that list item to the document
+
   }
 }
 
 function timeColor() {
   for (let i = 0; i < userTextArr.length; i++) {
 
-    let inputLocation = $(`#${i + 9}`);
+    let inputLocation = $(`#${i + 9}`); // run through each location id
 
-    if ((i + 9) < parseInt(currentHour)) {
+    if ((i + 9) < parseInt(currentHour)) { //these just change the color class
       inputLocation.attr("class", "past");
     }
     else if ((i + 9) === parseInt(currentHour)) {
@@ -36,16 +43,26 @@ function timeColor() {
   }
 }
 
-function saveInput(event) {
-  for (let i = 0; i < userTextArr.length; i++) {
-    const listPosition = userTextArr[i];
+function saveInput(event) { // save input to the array and then local
 
-    currentHour[i] = $(event.target).siblings().eq(1).val();
+  userSt = $(event.target).siblings().eq(1).val(); // get users text
 
-    $(`#${i + 9}`).html(listPosition);
+  console.log(userSt);
 
-    localStorage.setItem("usersInput", userTextArr);
-  }
+  btnTarget = $(event.target).siblings().eq(1).attr("id"); // get text id
+
+  console.log(btnTarget);
+
+  replaceMe =  userTextArr[btnTarget - 9]; // where in array should the text go
+
+  console.log(replaceMe);
+
+  userSt.replace(replaceMe, userSt); // replace whatever was in the array
+
+  localStorage.setItem("usersInput", userTextArr); // save changes
+
+  loadTextAreas(); // load changes to the screen
+
 }
 
 $(".saveBtn").on("click", saveInput);
