@@ -1,5 +1,4 @@
-// const currentHour = moment().format("H");
-const currentHour = 14; // for debugging an arbitrary time
+const currentHour = moment().format("H");
 let userTextObj = {
   9: "",
   10: "",
