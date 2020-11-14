@@ -1,33 +1,45 @@
 // const currentHour = moment().format("H");
 const currentHour = 14; // for debugging an arbitrary time
-let userTextArr = ["", "", "", "", "", "", "", "", ""]; // temporary textarea storage
+let userTextObj = {
+  9: "",
+  10: "",
+  11: "",
+  12: "",
+  13: "",
+  14: "",
+  15: "",
+  16: "",
+  17: ""
+}; // temporary textarea storage
 
 $("#currentDay").text(moment().format("MMM Do, YYYY")); // moment date caller
 
-checkStorage(); // if previous information exhists, add it to array
+checkStorage(); // if previous information exists, add it to object
 
 timeColor(); // change color based on time of day
 
 function checkStorage() {
-  let previously = localStorage.getItem("usersInput"); // get previous storage if it exhists
+  let previously = JSON.parse(localStorage.getItem("usersInput")); // get previous storage if it exhists
   if (previously) { // if it does, 
-    userTextArr = previously; // fill it into the array
+    userTextObj = previously; // fill it into the object
 
     loadTextAreas(); // load onto screen
   }
 }
 
 function loadTextAreas() {
-  for (let i = 0; i < userTextArr.length; i++) { 
-    const listPosition = userTextArr[i]; // un through each thing on the list
+  for (let i = 9; i < 18; i++) { 
+    const objKey = userTextObj[i]; // run through each thing on the list
 
-    $(`#${i + 9}`).html(listPosition); // add that list item to the document
+    console.log("objKey = " + objKey)
+
+    $(`#${i}`).html(objKey); // add that list item to the document
 
   }
 }
 
 function timeColor() {
-  for (let i = 0; i < userTextArr.length; i++) {
+  for (let i = 0; i < 9; i++) {
 
     let inputLocation = $(`#${i + 9}`); // run through each location id
 
@@ -47,22 +59,18 @@ function saveInput(event) { // save input to the array and then local
 
   userSt = $(event.target).siblings().eq(1).val(); // get users text
 
-  console.log(userSt);
-
   btnTarget = $(event.target).siblings().eq(1).attr("id"); // get text id
 
-  console.log(btnTarget);
+  userStStyle = $(event.target).siblings().eq(1);
 
-  replaceMe =  userTextArr[btnTarget - 9]; // where in array should the text go
+  $(event.target).css("color", "black");
 
-  console.log(replaceMe);
+  userTextObj[btnTarget] = userSt;
 
-  userSt.replace(replaceMe, userSt); // replace whatever was in the array
-
-  localStorage.setItem("usersInput", userTextArr); // save changes
+  localStorage.setItem("usersInput", JSON.stringify(userTextObj)); // save changes
 
   loadTextAreas(); // load changes to the screen
 
 }
 
-$(".saveBtn").on("click", saveInput);
+$(".btn").on("click", saveInput);
